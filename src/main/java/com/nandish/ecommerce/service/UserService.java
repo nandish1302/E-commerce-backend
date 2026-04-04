@@ -10,10 +10,14 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
+    //  @Autowired
+    // private UserRepository userRepository;
+  // constructor injection
+  public UserService(UserRepository userRepository) {
+      this.userRepository = userRepository;
+  }
     // Register
     public User register(User user) {
         return userRepository.save(user);
