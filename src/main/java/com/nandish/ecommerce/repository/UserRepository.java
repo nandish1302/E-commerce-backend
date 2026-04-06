@@ -3,6 +3,7 @@ package com.nandish.ecommerce.repository;
 
 
 import com.nandish.ecommerce.entity.User;
+import com.nandish.ecommerce.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
