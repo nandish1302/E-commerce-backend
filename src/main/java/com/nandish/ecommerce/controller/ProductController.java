@@ -2,8 +2,11 @@ package com.nandish.ecommerce.controller;
 import java.util.*;
 import com.nandish.ecommerce.entity.Product;
 import com.nandish.ecommerce.service.ProductService;
+import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/products")
@@ -14,11 +17,22 @@ public class ProductController {
       public Product addProduct(@RequestBody Product product){
               return productService.addProduct(product);
           }
-          public List<Product> getAllProduct (){
+          @GetMapping
+              public List<Product> getAllProduct (){
               return productService.getAllProduct();
           }
           @GetMapping("/{id}")
          public  Product getProductById(@PathVariable long id ){
               return productService.getProductById(id);
           }
+          @DeleteMapping("/{id}")
+         public  String deleteProduct(@PathVariable Long id ){
+              productService.deleteProduct(id);
+              return "Product deleted by ID ";
+          }
+          @PutMapping("/{id}")
+           public Product updateProduct(@PathVariable Long id , @RequestBody Product product){
+              return productService.updateProduct(id , product);
+          }
+
     }

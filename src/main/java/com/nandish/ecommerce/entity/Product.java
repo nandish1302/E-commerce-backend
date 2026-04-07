@@ -1,6 +1,11 @@
 package com.nandish.ecommerce.entity;
 import jakarta.persistence.*;
+import lombok.*;
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="products")
 public class Product {
     @Id
@@ -12,4 +17,5 @@ public class Product {
     private int stock ;
     private String category ;
     private String imageURL ;
+
 }
