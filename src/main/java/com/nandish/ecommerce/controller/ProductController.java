@@ -22,7 +22,7 @@ public class ProductController {
               return productService.getAllProduct();
           }
           @GetMapping("/{id}")
-         public  Product getProductById(@PathVariable long id ){
+         public  Product getProductById(@PathVariable Long id ){
               return productService.getProductById(id);
           }
           @DeleteMapping("/{id}")

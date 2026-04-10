@@ -15,16 +15,19 @@ public class AuthController {
     // Register API
     @PostMapping("/register")
     public User register(@RequestBody User user) {
+        System.out.println(user.getEmail());
         return userService.register(user);
     }
 
     // Login API
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public User login(@RequestBody User user) {
         User    loggedUser = userService.login(user.getEmail() , user.getPassword());
         if(loggedUser==null){
-            return "Invalid password or Username " ;
+            return null  ;
         }
-        return "Login successfull" ;
+        return loggedUser ;
     }
+
 }
+//http://localhost:8080/auth/register
