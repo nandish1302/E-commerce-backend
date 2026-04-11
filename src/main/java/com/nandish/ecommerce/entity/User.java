@@ -1,6 +1,6 @@
 package com.nandish.ecommerce.entity;
 import jakarta.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity        // tells Hibernate “this is a DB table”
 @Table(name = "users")  // table name
 public class User {
@@ -13,7 +13,7 @@ public class User {
 
     @Column(unique = true)
     private String email;
-
+     @JsonIgnore
     private String password;
 
     // Constructors
