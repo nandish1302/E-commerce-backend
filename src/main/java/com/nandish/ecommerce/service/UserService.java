@@ -2,6 +2,8 @@ package com.nandish.ecommerce.service;
 
 
 import com.nandish.ecommerce.entity.User;
+import com.nandish.ecommerce.exception.InvalidCredentialsException;
+import com.nandish.ecommerce.exception.UserNotFoundException;
 import com.nandish.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,13 +31,12 @@ public class UserService {
 
 
         if (user.isEmpty()) {
-           // throw new RuntimeException("User not found");
-            return null;
+            throw new UserNotFoundException("User not found");
+
         }
 
         if (password == null || !user.get().getPassword().equals(password)) {
-          //   throw new RuntimeException("Wrong password");
-            return null;
+             throw new InvalidCredentialsException("Wrong password");
         }
 
         return user.get();

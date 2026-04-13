@@ -17,12 +17,9 @@ public class CartService {
     private UserRepository userRepository ;
 
     public Cart  addToCart (Long userId , Long productId , int quantity  ){
-        User user = userRepository.findById(userId).orElse(null);
-        Product product = productRepository.findById(productId).orElse(null);
-        if(user==null){
-            return null ;
-            // i will fix this later ..
-        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found "));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found "));
+
         List<Cart> existingItems = cartRepository.findByUser_IdAndProduct_Id(userId,productId);
         if(!existingItems.isEmpty()){
             Cart existingCart = existingItems.get(0);
@@ -43,11 +40,8 @@ public class CartService {
     }
     public Cart updateQuantity(Long cartId, int quantity) {
 
-        Cart cart = cartRepository.findById(cartId).orElse(null);
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("no item present in cart "));
 
-        if (cart == null) {
-            return null;
-        }
 
         cart.setQuantity(quantity);
 

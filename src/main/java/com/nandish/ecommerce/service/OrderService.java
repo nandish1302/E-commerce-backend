@@ -2,6 +2,7 @@ package com.nandish.ecommerce.service;
 import java.util.*;
 
 import com.nandish.ecommerce.entity.*;
+import com.nandish.ecommerce.exception.UserNotFoundException;
 import com.nandish.ecommerce.repository.*;
 import com.nandish.ecommerce.repository.OrderRepository;
 import lombok.AllArgsConstructor;
@@ -24,14 +25,13 @@ public class OrderService {
     private CartRepository cartRepository ;
     public Order placeOrder(Long userId){
         // 1. get user
-        User user = userRepository.findById(userId).orElse(null);
-        if(user==null){
-            return null;
-        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found "));
+
         // 2.   get cart items
         List<Cart> cartItems = cartRepository.findByUserId(userId);
-        if(cartItems.isEmpty()){
-            return null ;
+
+        if (cartItems.isEmpty()) {
+            throw new RuntimeException("Cart is empty"); // we can improve later
         }
         // 3. create Order
         Order order = new Order();
