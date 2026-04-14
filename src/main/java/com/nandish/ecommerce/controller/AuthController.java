@@ -1,7 +1,8 @@
 package com.nandish.ecommerce.controller;
-
+import com.nandish.ecommerce.dto.UserResponseDTO;
 import com.nandish.ecommerce.entity.User;
 import com.nandish.ecommerce.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +15,9 @@ public class AuthController {
 
     // Register API
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        System.out.println(user.getEmail());
+    public UserResponseDTO register(@Valid @RequestBody User user) {
         return userService.register(user);
     }
-
     // Login API
     @PostMapping("/login")
     public User login(@RequestBody User user) {
@@ -28,6 +27,7 @@ public class AuthController {
         }
         return loggedUser ;
     }
+
 
 }
 //http://localhost:8080/auth/register

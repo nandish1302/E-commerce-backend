@@ -5,6 +5,7 @@ import com.nandish.ecommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+import com.nandish.ecommerce.dto.OrderResponseDTO;
 
 @RestController
 @RequestMapping("/orders")
@@ -17,8 +18,12 @@ public class OrderController {
     public Order placeOrder(@RequestParam Long userId) {
         return orderService.placeOrder(userId);
     }
-    @GetMapping("/{userId}")
+  /*  @GetMapping("/{userId}")
     public List<Order> getOrders(@PathVariable Long userId) {
         return orderService.getOrdersByUser(userId);
-    }
+    }*/
+  @GetMapping("/{userId}")
+  public List<OrderResponseDTO> getOrders(@PathVariable Long userId) {
+      return orderService.getOrdersByUser(userId);
+  }
 }

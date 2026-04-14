@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import  java.util.*;
 
 @Entity
 @Getter
@@ -25,6 +26,9 @@ public class Order {
     @JsonIgnore
     private User user ;
 
-    private double amount ;
+    private double totalAmount ;
+
+    @OneToMany(mappedBy = "order")   // 👈 ADD HERE
+    private List<OrderItem> orderItems;
 
 }

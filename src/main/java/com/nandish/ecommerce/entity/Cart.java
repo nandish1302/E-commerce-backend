@@ -3,6 +3,7 @@ import com.nandish.ecommerce.entity.User;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
@@ -25,5 +26,6 @@ public class Cart {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product ;
+    @NotBlank
     private int quantity ;
 }

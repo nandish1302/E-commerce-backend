@@ -1,6 +1,9 @@
 package com.nandish.ecommerce.entity;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 @Entity        // tells Hibernate “this is a DB table”
 @Table(name = "users")  // table name
 public class User {
@@ -8,12 +11,14 @@ public class User {
     @Id  // primary Key
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // auto increment
     private Long id;
-
+    @NotBlank
     private String name;
 
     @Column(unique = true)
+    @NotBlank
+    @Email
     private String email;
-     @JsonIgnore
+    @NotBlank
     private String password;
 
     // Constructors

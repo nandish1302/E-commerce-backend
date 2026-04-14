@@ -5,7 +5,8 @@ import com.nandish.ecommerce.service.ProductService;
 import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 
 @RestController
@@ -14,7 +15,7 @@ public class ProductController {
           @Autowired
       private ProductService productService ;
           @PostMapping
-      public Product addProduct(@RequestBody Product product){
+      public Product addProduct(@Valid @RequestBody Product product){
               return productService.addProduct(product);
           }
           @GetMapping
@@ -31,7 +32,7 @@ public class ProductController {
               return "Product deleted by ID ";
           }
           @PutMapping("/{id}")
-           public Product updateProduct(@PathVariable Long id , @RequestBody Product product){
+           public Product updateProduct(@Valid @PathVariable Long id , @RequestBody Product product){
               return productService.updateProduct(id , product);
           }
 

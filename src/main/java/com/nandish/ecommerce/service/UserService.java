@@ -1,6 +1,6 @@
 package com.nandish.ecommerce.service;
 
-
+import com.nandish.ecommerce.dto.UserResponseDTO;
 import com.nandish.ecommerce.entity.User;
 import com.nandish.ecommerce.exception.InvalidCredentialsException;
 import com.nandish.ecommerce.exception.UserNotFoundException;
@@ -21,8 +21,18 @@ public class UserService {
       this.userRepository = userRepository;
   }
     // Register
-    public User register(User user) {
+  /*  public User register(User user) {
         return userRepository.save(user);
+    }*/
+    public UserResponseDTO register(User user) {
+
+        User savedUser = userRepository.save(user);
+
+        return new UserResponseDTO(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getEmail()
+        );
     }
 
     // Login
