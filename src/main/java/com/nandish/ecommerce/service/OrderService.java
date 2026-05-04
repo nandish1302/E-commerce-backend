@@ -7,6 +7,7 @@
     import com.nandish.ecommerce.exception.UserNotFoundException;
     import com.nandish.ecommerce.repository.*;
     import com.nandish.ecommerce.repository.OrderRepository;
+    import jakarta.transaction.Transactional;
     import lombok.AllArgsConstructor;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@
         private ProductRepository productRepository ;
         @Autowired
         private CartRepository cartRepository ;
+        @Transactional
+
         public Order placeOrder(Long userId){
             // 1. get user
             User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found "));

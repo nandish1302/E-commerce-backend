@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,6 +17,8 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder ;
 
     //  @Autowired
     // private UserRepository userRepository;
@@ -28,6 +31,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }*/
     public UserResponseDTO register(User user) {
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User savedUser = userRepository.save(user);
 
@@ -48,8 +52,11 @@ public class UserService implements UserDetailsService {
 
         }
 
-        if (password == null || !user.get().getPassword().equals(password)) {
-             throw new InvalidCredentialsException("Wrong password");
+//        if (password == null || !user.get().getPassword().equals(password)) {
+//             throw new InvalidCredentialsException("Wrong password");
+//        }
+        if (password==null || !passwordEncoder.matches(password,user.get().getPassword())){
+            throw new InvalidCredentialsException("Wrong password");
         }
 
         return user.get();

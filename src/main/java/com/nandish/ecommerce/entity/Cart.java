@@ -26,6 +26,6 @@ public class Cart {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product ;
-    @NotBlank
+
     private int quantity ;
 }

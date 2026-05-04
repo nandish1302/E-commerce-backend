@@ -31,9 +31,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails , null , userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println("valid token for : " + email );
+           //      System.out.println("valid token for : " + email );
             }
-            System.out.println("Token found: " + token);
+         //   System.out.println("Token found: " + token);
 
         }
         filterChain.doFilter(request , response);
