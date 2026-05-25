@@ -27,7 +27,7 @@ public class AuthController {
     @PostMapping("/login")
     public Map<String , String > login (@RequestBody User user ){
         User loggedUSer = userService.login(user.getEmail(), user.getPassword());
-        String token = jwtUtil.generateToken(loggedUSer.getEmail());
+        String token = jwtUtil.generateToken(loggedUSer);
         return Map.of("token" , token ); // it will return JWT token
     }
 //    public User login(@RequestBody User user) {

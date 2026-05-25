@@ -2,6 +2,7 @@ package com.nandish.ecommerce.service;
 
 import com.nandish.ecommerce.dto.UserResponseDTO;
 import com.nandish.ecommerce.entity.User;
+import com.nandish.ecommerce.enums.Role;
 import com.nandish.ecommerce.exception.InvalidCredentialsException;
 import com.nandish.ecommerce.exception.UserNotFoundException;
 import com.nandish.ecommerce.repository.UserRepository;
@@ -31,7 +32,14 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }*/
     public UserResponseDTO register(User user) {
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+        if(existingUser.isPresent()){
+            throw new RuntimeException("email already exists ");
+
+        }
       user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.ROLE_USER);
+
 
         User savedUser = userRepository.save(user);
 
@@ -70,7 +78,7 @@ public class UserService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .roles("USER")
+                .roles(user.getRole().name().replace("ROLE_",""))
                 .build();
     }
 }

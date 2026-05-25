@@ -4,6 +4,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Component;
+import com.nandish.ecommerce.entity.User;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -13,9 +14,10 @@ public class JwtUtil { // secret sign and verify token . its a stamp used to app
     private static final String SECRET = "nandish-secret-key-must-be-32-chars!!"; // this is your app's private password used to sign the token. Only your server knows it.
     private static final long EXPIRY = 1000 * 60 * 60 ; //1 HOUR ;
     private static final Key key =Keys.hmacShaKeyFor(SECRET.getBytes()); // this converts secret string into crytography
-    public String generateToken(String email ){
+    public String generateToken(User  user ){
         return Jwts.builder()
-                .setSubject(email)  // bakes the useremail into the token
+                .setSubject(user.getEmail())
+                .claim("role",user.getRole().name())// bakes the useremail into the token
                 .setIssuedAt(new Date()) // stamps when the token was created
                 .setExpiration(new Date(System.currentTimeMillis()+EXPIRY)) // stamps when it dies
                 .signWith(key , SignatureAlgorithm.HS256) // signs with secrey key so no one can fake it

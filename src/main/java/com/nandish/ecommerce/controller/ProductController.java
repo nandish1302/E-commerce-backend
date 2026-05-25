@@ -4,6 +4,7 @@ import com.nandish.ecommerce.entity.Product;
 import com.nandish.ecommerce.service.ProductService;
 import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.*;
 public class ProductController {
           @Autowired
       private ProductService productService ;
+          @PreAuthorize("hasRole('ADMIN')")
           @PostMapping
       public Product addProduct(@Valid @RequestBody Product product){
               return productService.addProduct(product);

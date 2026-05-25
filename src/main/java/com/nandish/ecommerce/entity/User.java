@@ -1,8 +1,17 @@
 package com.nandish.ecommerce.entity;
+import com.nandish.ecommerce.enums.Role;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import com.nandish.ecommerce.enums.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 
 @Entity        // tells Hibernate “this is a DB table”
 @Table(name = "users")  // table name
@@ -20,6 +29,8 @@ public class User {
     private String email;
     @NotBlank
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // Constructors
     public User() {}
