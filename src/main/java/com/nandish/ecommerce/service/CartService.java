@@ -1,6 +1,7 @@
 package com.nandish.ecommerce.service;
 import com.nandish.ecommerce.repository.*;
 import com.nandish.ecommerce.entity.*;
+import com.nandish.ecommerce.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,11 @@ public class CartService {
         cart.setQuantity(quantity);
         return cartRepository.save(cart);
     }
+    public List<Cart> getMyCart(){
+        User user = SecurityUtil.getCurrentUser(userRepository);
+        return cartRepository.findByUserId(user.getId());
+    }
+
     public List<Cart> getCartByUser(Long userId) {
         return cartRepository.findByUserId(userId); // column name
     }

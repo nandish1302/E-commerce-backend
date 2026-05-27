@@ -22,9 +22,9 @@ public class CartController {
     ){
         return cartService.addToCart(userId , productId , quantity);
     }
-    @GetMapping("/{userId}")
+    @GetMapping("/my-cart")
     public List<Cart> getCart(@PathVariable Long userId ){
-        return cartService.getCartByUser(userId);
+        return cartService.getMyCart();
     }
     @DeleteMapping("/{cartID}")
     public String removeFromCart(@PathVariable Long cartID ){
