@@ -16,11 +16,11 @@ public class CartController {
 
     @PostMapping
     public Cart addToCart(
-            @RequestParam Long userId ,
+
             @RequestParam Long productId ,
             @RequestParam int quantity
     ){
-        return cartService.addToCart(userId , productId , quantity);
+        return cartService.addToCart( productId , quantity);
     }
     @GetMapping("/my-cart")
     public List<Cart> getCart(@PathVariable Long userId ){
