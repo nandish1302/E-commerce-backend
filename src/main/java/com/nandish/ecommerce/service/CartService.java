@@ -17,11 +17,12 @@ public class CartService {
    @Autowired
     private UserRepository userRepository ;
 
-    public Cart  addToCart (Long userId , Long productId , int quantity  ){
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found "));
+    public Cart  addToCart ( Long productId , int quantity  ){
+       // User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found "));
+        User user = SecurityUtil.getCurrentUser(userRepository);
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found "));
 
-        List<Cart> existingItems = cartRepository.findByUser_IdAndProduct_Id(userId,productId);
+        List<Cart> existingItems = cartRepository.findByUser_IdAndProduct_Id(user.getId(), productId);
         if(!existingItems.isEmpty()){
             Cart existingCart = existingItems.get(0);
             existingCart.setQuantity(existingCart.getQuantity()+quantity);
