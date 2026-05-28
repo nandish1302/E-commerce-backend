@@ -4,6 +4,7 @@ import com.nandish.ecommerce.entity.*;
 import com.nandish.ecommerce.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.*;
 @Service
@@ -42,12 +43,27 @@ public class CartService {
     public List<Cart> getCartByUser(Long userId) {
         return cartRepository.findByUserId(userId); // column name
     }
-    public void deleteFromCart (Long cartId ){
-        cartRepository.deleteById(cartId);
+    public void deleteFromCart (Long cartId ) {
+        User user = SecurityUtil.getCurrentUser(userRepository);
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("cart not found "));
+        if (!cart.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("Access denied");
+        }
+        cartRepository.delete(cart);
     }
     public Cart updateQuantity(Long cartId, int quantity) {
 
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("no item present in cart "));
+       // Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("no item present in cart "));
+        User currentUser =
+                SecurityUtil.getCurrentUser(userRepository);
+
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() ->
+                        new RuntimeException("No item present in cart"));
+
+        if(!cart.getUser().getId().equals(currentUser.getId())){
+            throw new AccessDeniedException("Access denied");
+        }
 
 
         cart.setQuantity(quantity);
