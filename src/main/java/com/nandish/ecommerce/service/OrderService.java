@@ -7,6 +7,7 @@
     import com.nandish.ecommerce.exception.UserNotFoundException;
     import com.nandish.ecommerce.repository.*;
     import com.nandish.ecommerce.repository.OrderRepository;
+    import com.nandish.ecommerce.security.SecurityUtil;
     import jakarta.transaction.Transactional;
     import lombok.AllArgsConstructor;
     import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,12 @@
         private CartRepository cartRepository ;
         @Transactional
 
-        public Order placeOrder(Long userId){
+        public Order placeOrder(){
             // 1. get user
-            User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found "));
-
+           // User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found "));
+       User user  = SecurityUtil.getCurrentUser(userRepository);
             // 2.   get cart items
-            List<Cart> cartItems = cartRepository.findByUserId(userId);
+            List<Cart> cartItems = cartRepository.findByUserId(user.getId());
 
             if (cartItems.isEmpty()) {
                 throw new RuntimeException("Cart is empty"); // we can improve later
@@ -75,6 +76,18 @@
         public List<OrderResponseDTO> getOrdersByUser(Long userId) {
 
             List<Order> orders = orderRepository.findByUser_Id(userId);
+
+            return orders.stream()
+                    .map(this::convertToDTO)
+                    .toList();
+        }
+        public List<OrderResponseDTO> getMyOrders() {
+
+            User user =
+                    SecurityUtil.getCurrentUser(userRepository);
+
+            List<Order> orders =
+                    orderRepository.findByUser_Id(user.getId());
 
             return orders.stream()
                     .map(this::convertToDTO)

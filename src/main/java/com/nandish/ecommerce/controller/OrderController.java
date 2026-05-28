@@ -15,15 +15,16 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public Order placeOrder(@RequestParam Long userId) {
-        return orderService.placeOrder(userId);
+    public Order placeOrder() {
+        return orderService.placeOrder();
     }
   /*  @GetMapping("/{userId}")
     public List<Order> getOrders(@PathVariable Long userId) {
         return orderService.getOrdersByUser(userId);
     }*/
-  @GetMapping("/{userId}")
-  public List<OrderResponseDTO> getOrders(@PathVariable Long userId) {
-      return orderService.getOrdersByUser(userId);
+  @GetMapping("/my-orders")
+  public List<OrderResponseDTO> getOrders() {
+      return orderService.getMyOrders();
   }
 }
+//GET http://localhost:8080/orders/my-orders
