@@ -15,13 +15,13 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
-    @NotBlank
+    @NotBlank(message = "Product name is required ")
     private String name ;
     @NotBlank
     private String description ;
-    @Min(1)
+    @Min(value = 0 , message = "the price should be greater than Zero ")
     private double price ;
-    @Min(0)
+    @Min(value = 0 , message = "Stock should not be negative ")
     private int stock ;
     @NotBlank
     private String category ;
