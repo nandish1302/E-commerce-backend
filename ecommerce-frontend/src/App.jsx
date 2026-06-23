@@ -1,33 +1,23 @@
-import "./App.css";
 
-function App() {
-  const products = [
-    { id: 1, name: "Laptop", price: 55000 },
-    { id: 2, name: "Phone", price: 25000 },
-    { id: 3, name: "Headphones", price: 2000 },
-  ];
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Products from "./pages/Products";
+import  Cart  from "./pages/Cart";
+import Orders from "./pages/Orders";
+import { Route, Routes } from "react-router-dom";
 
-  function handleAddToCart(productName) {
-    alert(productName + " added to cart");
-  }
+function App(){
+    
+    return (
+        <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<Orders />} />
+        </Routes>
+    )
 
-  return (
-    <div className="app">
-      <h1>E-Commerce Frontend</h1>
 
-      <div className="products">
-        {products.map((product) => (
-          <div className="product-card" key={product.id}>
-            <h2>{product.name}</h2>
-            <p>Price: ₹{product.price}</p>
-            <button onClick={() => handleAddToCart(product.name)}>
-              Add to Cart
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
+    }
 export default App;
