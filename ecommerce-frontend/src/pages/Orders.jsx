@@ -1,8 +1,12 @@
+import Navbar from "../components/Navbar";
 
-
-export const Orders = () => {
+const Orders = () => {
   return (
-    <div>Orders</div>
-  )
-}
-export default Orders
+    <>
+      <Navbar />
+      <h1>Orders Page</h1>
+    </>
+  );
+};
+
+export default Orders;
