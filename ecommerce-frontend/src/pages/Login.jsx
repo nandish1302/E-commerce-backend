@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -7,16 +8,27 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try{
+      const response = await axios.post(
+        "http://localhost:8080/auth/login",
+        {
+          email,
+          password
+        }
+      );
+      localStorage.setItem("token", response.data.token);
+      alert("Login Successful");
+          navigate("/products");  
 
-    // Fake JWT Token
-    localStorage.setItem("token", "abc123");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please check your credentials.");
+    }
 
-    navigate("/products");  
+    
   };
 
   return (

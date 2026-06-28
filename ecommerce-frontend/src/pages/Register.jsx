@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Register = () => {
   const [ name, setName ] = useState("");
@@ -7,17 +8,34 @@ const Register = () => {
   const [ password, setPassword ] = useState(""); 
   const [ confirmPassword, setConfirmPassword ] = useState("");
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Password",password);
-    
+    if (password !== confirmPassword) {
+  alert("Passwords do not match");
+  return;
+}
+   try {
 
-    // Fake JWT Token
-    localStorage.setItem("token", "abc123");
+  await axios.post(
+    "http://localhost:8080/auth/register",
+    {
+      name,
+      email,
+      password
+    }
+  );
 
-    navigate("/login");  
+  alert("Registration Successful");
+
+  navigate("/login");
+
+} catch (error) {
+
+  console.log(error);
+
+  alert("Registration Failed");
+
+}  
   } 
 
   return (
