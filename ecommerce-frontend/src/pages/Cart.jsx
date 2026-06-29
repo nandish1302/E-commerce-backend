@@ -1,7 +1,40 @@
 import Navbar from "../components/Navbar";
 import Button from "../components/Button";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const Cart = ({cart , removeFromCart , handleCheckout}) => {
+const [cart, setCart] = useState([]);
+const [loading, setLoading] = useState(true);
+const fetchCart = async () => {
+
+  try {
+
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:8080/cart/my-cart",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setCart(response.data);
+
+  } catch (error) {
+
+    console.log(error);
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+};
+
+const Cart = () => {
   const totalPrice = cart.reduce((total, product) => {
     return total + product.price;
   },0);

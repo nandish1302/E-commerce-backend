@@ -10,10 +10,22 @@ const Products = ({cart , setCart}) => {
  
 
 
-  const addToCart = (product) => {
-    console.log("Adding to cart:", product);
-  setCart((prevCart) => [...prevCart, product]);
-};
+  const addToCart = async (product) => {
+    try {
+    const token = localStorage.getItem("token");
+      await axios.post( 
+        "http://localhost:8080/cart",null ,{
+          params: { productId: product.id , quantity: 1
+
+           },
+          headers: {  
+            Authorization: `Bearer ${token}`,
+        },
+      }  
+    );
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+  }
 
   useEffect(() => {
     fetchProducts();
