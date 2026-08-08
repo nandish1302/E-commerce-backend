@@ -10,12 +10,16 @@ const Products = ({ cart, setCart }) => {
 
   const fetchProducts = async () => {
     const token = localStorage.getItem("token");
+
     try {
-      const response = await axios.get("http://localhost:8080/products", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:8080/products",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setProducts(response.data);
       setLoading(false);
@@ -33,34 +37,45 @@ const Products = ({ cart, setCart }) => {
   const addToCart = async (product) => {
     try {
       const token = localStorage.getItem("token");
+
       await axios.post(
         "http://localhost:8080/cart",
         null,
         {
-          params: { productId: product.id, quantity: 1 },
+          params: {
+            productId: product.id,
+            quantity: 1,
+          },
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
+      // Update frontend cart state
+      setCart((prevCart) => [...prevCart, product]);
+
+      console.log("Product added to cart:", product.name);
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
   };
 
   if (loading) {
-    return <h1>Loading Products...</h1>;
+    return <div>Loading Products...</div>;
   }
 
   if (error) {
-    return <h1>{error}</h1>;
+    return <div>{error}</div>;
   }
 
   return (
     <>
       <Navbar />
+
       <h1>Products Page</h1>
-      <h2>Cart Items: {cart ? cart.length : 0}</h2>
+
+      <p>Cart Items: {cart ? cart.length : 0}</p>
 
       <div className="product-list">
         {products.map((product) => (

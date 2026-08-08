@@ -22,7 +22,7 @@ const Cart = () => {
 
       setCart(response.data);
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching cart:", error);
     } finally {
       setLoading(false);
     }
@@ -46,27 +46,28 @@ const Cart = () => {
       );
 
       fetchCart();
-
     } catch (error) {
-      console.log(error);
+      console.log("Error removing item:", error);
     }
   };
 
   if (loading) {
-    return <h1>Loading Cart...</h1>;
+    return <div>Loading Cart...</div>;
   }
 
   if (cart.length === 0) {
     return (
       <>
         <Navbar />
+
         <h1>Your Cart is Empty</h1>
       </>
     );
   }
 
   const totalPrice = cart.reduce(
-    (total, item) => total + item.product.price * item.quantity,
+    (total, item) =>
+      total + item.product.price * item.quantity,
     0
   );
 
@@ -78,15 +79,34 @@ const Cart = () => {
 
       <p>Items: {cart.length}</p>
 
-      <p>Total Price: ₹ {totalPrice.toFixed(2)}</p>
+      <p>
+        Total Price: ₹ {totalPrice.toFixed(2)}
+      </p>
 
       {cart.map((item) => (
         <div key={item.id}>
-          <h2>{item.product.title}</h2>
+          <h2>{item.product.name}</h2>
 
-          <p>₹ {item.product.price}</p>
+          <p>
+            Category: {item.product.category}
+          </p>
 
-          <p>Quantity: {item.quantity}</p>
+          <p>
+            {item.product.description}
+          </p>
+
+          <p>
+            Price: ₹ {item.product.price}
+          </p>
+
+          <p>
+            Quantity: {item.quantity}
+          </p>
+
+          <p>
+            Item Total: ₹{" "}
+            {(item.product.price * item.quantity).toFixed(2)}
+          </p>
 
           <Button
             text="Remove"
@@ -94,6 +114,10 @@ const Cart = () => {
           />
         </div>
       ))}
+
+      <h2>
+        Total: ₹ {totalPrice.toFixed(2)}
+      </h2>
 
       <Button
         text="Checkout"

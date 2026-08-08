@@ -23,7 +23,7 @@ public class CartController {
         return cartService.addToCart( productId , quantity);
     }
     @GetMapping("/my-cart")
-    public List<Cart> getCart(@PathVariable Long userId ){
+    public List<Cart> getCart(){
         return cartService.getMyCart();
     }
     @DeleteMapping("/{cartID}")
