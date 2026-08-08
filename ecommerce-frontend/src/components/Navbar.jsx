@@ -1,14 +1,59 @@
-    import { Link, NavLink} from "react-router-dom"; 
-        const Navbar = () => {
-            return(
-                <nav>
-                    <Link to="/products">Products</Link>
-                    <Link to="/cart">Cart</Link>
-                    <Link to="/orders">Orders</Link>
-                <Link to="/login">Login</Link>
-                <Link to="/register">Register</Link> 
-                </nav>
-            )
-        }
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import "../styles/Navbar.css";
 
-  export default Navbar;      
+const Navbar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  return (
+    <nav className="navbar">
+
+      <div className="navbar-container">
+
+        <Link to="/products" className="navbar-logo">
+          🛒 MyStore
+        </Link>
+
+        <div className="navbar-links">
+
+          <NavLink
+            to="/products"
+            className="nav-link"
+          >
+            Products
+          </NavLink>
+
+          <NavLink
+            to="/cart"
+            className="nav-link"
+          >
+            Cart
+          </NavLink>
+
+          <NavLink
+            to="/orders"
+            className="nav-link"
+          >
+            Orders
+          </NavLink>
+
+          <button
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </nav>
+  );
+};
+
+export default Navbar;

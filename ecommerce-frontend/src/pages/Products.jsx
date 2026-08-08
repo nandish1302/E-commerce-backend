@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
+import "../styles/Products.css";
 
 const Products = ({ cart, setCart }) => {
   const [products, setProducts] = useState([]);
@@ -52,7 +53,6 @@ const Products = ({ cart, setCart }) => {
         }
       );
 
-      // Update frontend cart state
       setCart((prevCart) => [...prevCart, product]);
 
       console.log("Product added to cart:", product.name);
@@ -62,30 +62,55 @@ const Products = ({ cart, setCart }) => {
   };
 
   if (loading) {
-    return <div>Loading Products...</div>;
+    return (
+      <>
+        <Navbar />
+        <div className="products-message">
+          Loading Products...
+        </div>
+      </>
+    );
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <>
+        <Navbar />
+        <div className="products-message error">
+          {error}
+        </div>
+      </>
+    );
   }
 
   return (
     <>
       <Navbar />
 
-      <h1>Products Page</h1>
+      <main className="products-page">
 
-      <p>Cart Items: {cart ? cart.length : 0}</p>
+        <div className="products-header">
+          <div>
+            <h1>Our Products</h1>
+            <p>Find the products you need.</p>
+          </div>
 
-      <div className="product-list">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            addToCart={addToCart}
-          />
-        ))}
-      </div>
+          <div className="cart-count">
+            Cart Items: {cart ? cart.length : 0}
+          </div>
+        </div>
+
+        <div className="product-list">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              addToCart={addToCart}
+            />
+          ))}
+        </div>
+
+      </main>
     </>
   );
 };

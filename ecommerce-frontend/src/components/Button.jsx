@@ -1,8 +1,18 @@
-const Button = (props) => {
+import "../styles/Button.css";
+
+const Button = ({
+  text,
+  onClick,
+  variant = "primary",
+  disabled = false,
+}) => {
   return (
     <button
-       onClick={props.onClick}>
-      {props.text}
+      className={`button button-${variant}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {text}
     </button>
   );
 };

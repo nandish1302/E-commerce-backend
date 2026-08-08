@@ -1,38 +1,56 @@
 import Button from "./Button";
-import "./ProductCard.css";
+import "../styles/ProductCard.css";
 
 const ProductCard = ({ product, addToCart }) => {
-  if (!product) return null;
+  if (!product) {
+    return null;
+  }
 
   return (
     <div className="product-card">
 
-     \
+      <div className="product-card-content">
 
-      <div className="product-info">
-
-        <h2>{product.name}</h2>
-
-        <p className="product-category">
+        <span className="product-category">
           {product.category}
-        </p>
+        </span>
+
+        <h2 className="product-name">
+          {product.name}
+        </h2>
 
         <p className="product-description">
           {product.description}
         </p>
 
-        <p className="product-price">
-          ₹ {product.price}
-        </p>
+        <div className="product-details">
 
-        <p className="product-stock">
-          Stock: {product.stock}
-        </p>
+          <span className="product-price">
+            ₹ {product.price}
+          </span>
 
-        <Button
-          text="Add to Cart"
-          onClick={() => addToCart(product)}
-        />
+          <span className="product-stock">
+            {product.stock > 0
+              ? `In Stock: ${product.stock}`
+              : "Out of Stock"}
+          </span>
+
+        </div>
+
+        <div className="product-card-button">
+          <Button
+            text={
+              product.stock > 0
+                ? "Add to Cart"
+                : "Out of Stock"
+            }
+            onClick={() => {
+              if (product.stock > 0) {
+                addToCart(product);
+              }
+            }}
+          />
+        </div>
 
       </div>
 
