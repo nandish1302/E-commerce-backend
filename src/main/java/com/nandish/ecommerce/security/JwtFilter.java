@@ -1,4 +1,5 @@
 package com.nandish.ecommerce.security;
+
 import com.nandish.ecommerce.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,31 +12,62 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
+
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+
     @Autowired
-    private JwtUtil jwtUtil ;
+    private JwtUtil jwtUtil;
+
     @Autowired
     private UserDetailsService userDetailsService;
-    @Override
-    protected void doFilterInternal(HttpServletRequest request ,
-                                    HttpServletResponse response ,
-                                    FilterChain filterChain )
-        throws ServletException,IOException{
-        String  authHeader = request.getHeader("Authorization");
-        if(authHeader != null && authHeader.startsWith("Bearer ")){
-            String token = authHeader.substring(7);
-            if(jwtUtil.isTokenValid(token)){
-                String email = jwtUtil.extractEmail(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails , null , userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-           //      System.out.println("valid token for : " + email );
-            }
-         //   System.out.println("Token found: " + token);
 
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+
+            String token = authHeader.substring(7);
+
+            if (jwtUtil.isTokenValid(token)) {
+
+                String email = jwtUtil.extractEmail(token);
+
+                System.out.println("VALID TOKEN");
+                System.out.println("EMAIL: " + email);
+
+                UserDetails userDetails =
+                        userDetailsService.loadUserByUsername(email);
+
+                System.out.println(
+                        "AUTHORITIES: " + userDetails.getAuthorities()
+                );
+
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+
+                SecurityContextHolder
+                        .getContext()
+                        .setAuthentication(authToken);
+
+            } else {
+
+                System.out.println("INVALID JWT TOKEN");
+            }
         }
-        filterChain.doFilter(request , response);
+
+        filterChain.doFilter(request, response);
     }
 }

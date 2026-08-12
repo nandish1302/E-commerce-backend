@@ -77,10 +77,17 @@
 			<version>0.11.5</version>
 		</dependency>
 
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
+		</dependency>
+		<!-- Google Gemini / GenAI -->
+		<dependency>
+			<groupId>com.google.genai</groupId>
+			<artifactId>google-genai</artifactId>
+			<version>1.63.0</version>
 		</dependency>
 
 	</dependencies>
@@ -92,5 +99,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>

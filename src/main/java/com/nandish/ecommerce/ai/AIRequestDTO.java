@@ -1,10 +1,11 @@
 package com.nandish.ecommerce.ai;
-import org.springframework.web.bind.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.Getter;
+import lombok.Setter;
 
-@RestController
-@RequestMapping("/ai")
+@Getter
+@Setter
 public class AIRequestDTO {
+
+    private String question;
 
 }
