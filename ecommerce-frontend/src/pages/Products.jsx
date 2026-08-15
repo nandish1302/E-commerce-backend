@@ -32,11 +32,10 @@ const Products = ({ cart, setCart }) => {
       );
 
       setProducts(response.data);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);
-
       setError("Failed to load products");
+    } finally {
       setLoading(false);
     }
   };
@@ -67,8 +66,8 @@ const Products = ({ cart, setCart }) => {
         }
       );
 
-      setCart((prevCart) => [
-        ...prevCart,
+      setCart((previousCart) => [
+        ...previousCart,
         product,
       ]);
 
@@ -86,7 +85,19 @@ const Products = ({ cart, setCart }) => {
   };
 
   // =========================
-  // LOADING STATE
+  // SCROLL TO PRODUCTS
+  // =========================
+
+  const exploreProducts = () => {
+    document
+      .getElementById("products-section")
+      ?.scrollIntoView({
+        behavior: "smooth",
+      });
+  };
+
+  // =========================
+  // LOADING
   // =========================
 
   if (loading) {
@@ -95,14 +106,17 @@ const Products = ({ cart, setCart }) => {
         <Navbar />
 
         <div className="products-message">
-          Loading Products...
+          <div>
+            <div className="loading-icon">🌿</div>
+            <p>Preparing your wellness collection...</p>
+          </div>
         </div>
       </>
     );
   }
 
   // =========================
-  // ERROR STATE
+  // ERROR
   // =========================
 
   if (error) {
@@ -111,14 +125,24 @@ const Products = ({ cart, setCart }) => {
         <Navbar />
 
         <div className="products-message error">
-          {error}
+          <div>
+            <div className="loading-icon">⚠️</div>
+            <p>{error}</p>
+
+            <button
+              className="retry-button"
+              onClick={() => window.location.reload()}
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </>
     );
   }
 
   // =========================
-  // PRODUCTS PAGE
+  // MAIN PAGE
   // =========================
 
   return (
@@ -127,51 +151,293 @@ const Products = ({ cart, setCart }) => {
 
       <main className="products-page">
 
-        {/* Products Header */}
+        {/* =================================
+            HERO SECTION
+        ================================= */}
 
-        <div className="products-header">
+        <section className="store-hero">
 
-          <div>
-            <h1>Our Products</h1>
+          <div className="hero-content">
+
+            <span className="hero-badge">
+              🌿 NUTRITION • WELLNESS • LIFESTYLE
+            </span>
+
+            <h1>
+              Nourish Your
+              <span> Everyday Wellness</span>
+            </h1>
 
             <p>
-              Find the products you need.
+              Discover a curated collection of nutrition,
+              wellness, and personal care products in one
+              convenient shopping experience.
             </p>
-          </div>
 
-          <div className="products-header-actions">
+            <div className="hero-actions">
 
-            <div className="cart-count">
-              Cart Items:{" "}
-              {cart ? cart.length : 0}
+              <button
+                className="primary-button"
+                onClick={exploreProducts}
+              >
+                <span className="button-icon">
+                  🌿
+                </span>
+
+                <span>
+                  Explore Collection
+                </span>
+
+                <span className="button-arrow">
+                  →
+                </span>
+              </button>
+
+
+              <button
+                className="secondary-button"
+                onClick={() => navigate("/chatbot")}
+              >
+                <span className="ai-icon">
+                  ✦
+                </span>
+
+                <span className="ai-button-text">
+                  <strong>
+                    Meet Your AI Guide
+                  </strong>
+
+                  <small>
+                    Ask • Discover • Explore
+                  </small>
+                </span>
+
+                <span className="ai-arrow">
+                  ↗
+                </span>
+              </button>
+
             </div>
 
-            <button
-              className="chatbot-launch-button"
-              onClick={() => navigate("/chatbot")}
-            >
-              💬 Customer Support
-            </button>
+          </div>
+
+
+          {/* HERO VISUAL */}
+
+          <div className="hero-visual">
+
+            <div className="hero-circle">
+
+              <div className="hero-leaf">
+                🌿
+              </div>
+
+              <div className="hero-floating-card hero-card-one">
+                ✨ Wellness
+              </div>
+
+              <div className="hero-floating-card hero-card-two">
+                🥤 Nutrition
+              </div>
+
+            </div>
 
           </div>
 
-        </div>
+        </section>
 
-        {/* Product List */}
 
-        <div className="product-list">
+        {/* =================================
+            ABOUT STORE
+        ================================= */}
 
-          {products.map((product) => (
+        <section className="about-store">
 
-            <ProductCard
-              key={product.id}
-              product={product}
-              addToCart={addToCart}
-            />
+          <div className="about-heading">
 
-          ))}
+            <span className="section-label">
+              WHY SHOP WITH US
+            </span>
 
-        </div>
+            <h2>
+              Wellness, Made Simple
+            </h2>
+
+            <p>
+              Browse products by your needs, discover
+              useful information, and get assistance
+              whenever you need it.
+            </p>
+
+          </div>
+
+
+          <div className="category-grid">
+
+            <div className="category-card">
+
+              <div className="category-icon">
+                🥤
+              </div>
+
+              <h3>
+                Nutrition
+              </h3>
+
+              <p>
+                Explore nutrition products suitable
+                for different everyday routines.
+              </p>
+
+            </div>
+
+
+            <div className="category-card">
+
+              <div className="category-icon">
+                🌿
+              </div>
+
+              <h3>
+                Wellness
+              </h3>
+
+              <p>
+                Discover products focused on
+                everyday wellness and active living.
+              </p>
+
+            </div>
+
+
+            <div className="category-card">
+
+              <div className="category-icon">
+                ✨
+              </div>
+
+              <h3>
+                Personal Care
+              </h3>
+
+              <p>
+                Find personal care products for
+                your everyday self-care routine.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* =================================
+            PRODUCTS SECTION
+        ================================= */}
+
+        <section
+          id="products-section"
+          className="products-section"
+        >
+
+          <div className="products-header">
+
+            <div>
+
+              <span className="section-label">
+                OUR COLLECTION
+              </span>
+
+              <h2>
+                Explore Our Products
+              </h2>
+
+              <p>
+                Find the right products for your
+                nutrition, wellness, and personal
+                care needs.
+              </p>
+
+            </div>
+
+
+            <div className="cart-count">
+              🛒 {cart ? cart.length : 0} Items
+            </div>
+
+          </div>
+
+
+          <div className="product-list">
+
+            {products.length > 0 ? (
+
+              products.map((product) => (
+
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  addToCart={addToCart}
+                />
+
+              ))
+
+            ) : (
+
+              <div className="no-products">
+                No products available at the moment.
+              </div>
+
+            )}
+
+          </div>
+
+        </section>
+
+
+        {/* =================================
+            AI WELLNESS GUIDE
+        ================================= */}
+
+        <section className="ai-guide-section">
+
+          <div className="ai-guide-icon">
+            ✦
+          </div>
+
+
+          <div className="ai-guide-content">
+
+            <span className="section-label">
+              YOUR AI WELLNESS GUIDE
+            </span>
+
+            <h2>
+              Need Help Finding Something?
+            </h2>
+
+            <p>
+              Ask about products, shipping, returns,
+              refunds, payments, or order
+              cancellations and get instant assistance.
+            </p>
+
+          </div>
+
+
+          <button
+            className="ai-guide-button"
+            onClick={() => navigate("/chatbot")}
+          >
+            <span>🌿</span>
+
+            Ask Your Wellness Guide
+
+            <span>→</span>
+          </button>
+
+        </section>
 
       </main>
     </>
