@@ -1,0 +1,493 @@
+/* ==============================
+   FLOATING CHAT BUTTON
+================================ */
+
+.faq-chat-button {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+
+  width: 58px;
+  height: 58px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #176b3a;
+  color: white;
+
+  font-size: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+
+  z-index: 99999;
+
+  transition: transform 0.2s ease;
+}
+
+.faq-chat-button:hover {
+  transform: scale(1.08);
+}
+
+
+/* ==============================
+   CHATBOT WINDOW
+================================ */
+
+.faq-chatbot {
+  position: fixed;
+
+  right: 24px;
+  bottom: 24px;
+
+  width: 360px;
+  height: 560px;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+
+  z-index: 99999;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  box-sizing: border-box;
+}
+
+
+/* ==============================
+   HEADER
+================================ */
+
+.faq-header {
+  height: 72px;
+
+  flex-shrink: 0;
+
+  padding: 14px 16px;
+
+  background: #176b3a;
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+}
+
+.faq-header h2 {
+  margin: 0;
+
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.faq-header p {
+  margin: 4px 0 0;
+
+  font-size: 11px;
+
+  opacity: 0.85;
+}
+
+
+/* ==============================
+   HEADER RIGHT SIDE
+================================ */
+
+.faq-header-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+/* Online */
+
+.faq-status {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  font-size: 11px;
+}
+
+.faq-status span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #72e58b;
+}
+
+
+/* Close */
+
+.faq-close {
+  width: 28px;
+  height: 28px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faq-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+
+/* ==============================
+   MESSAGE AREA
+================================ */
+
+.faq-messages {
+  flex: 1;
+
+  min-height: 0;
+
+  padding: 14px;
+
+  overflow-y: auto;
+
+  background: #f5f7f5;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  box-sizing: border-box;
+}
+
+
+/* Scrollbar */
+
+.faq-messages::-webkit-scrollbar {
+  width: 5px;
+}
+
+.faq-messages::-webkit-scrollbar-thumb {
+  background: #c7c7c7;
+
+  border-radius: 10px;
+}
+
+
+/* ==============================
+   MESSAGES
+================================ */
+
+.faq-message {
+  max-width: 78%;
+
+  padding: 9px 12px;
+
+  border-radius: 13px;
+
+  font-size: 13px;
+
+  line-height: 1.45;
+
+  box-sizing: border-box;
+}
+
+.faq-message strong {
+  display: block;
+
+  font-size: 10px;
+
+  margin-bottom: 3px;
+}
+
+.faq-message p {
+  margin: 0;
+}
+
+
+/* AI */
+
+.faq-ai-message {
+  align-self: flex-start;
+
+  background: white;
+
+  color: #333;
+
+  border: 1px solid #e5e5e5;
+
+  border-bottom-left-radius: 4px;
+}
+
+
+/* User */
+
+.faq-user-message {
+  align-self: flex-end;
+
+  background: #176b3a;
+
+  color: white;
+
+  border-bottom-right-radius: 4px;
+}
+
+
+/* ==============================
+   LOADING
+================================ */
+
+.faq-loading {
+  display: flex;
+
+  gap: 4px;
+
+  padding: 3px 0;
+}
+
+.faq-loading span {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #777;
+
+  animation: faq-bounce 1.2s infinite;
+}
+
+.faq-loading span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.faq-loading span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes faq-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+
+  30% {
+    transform: translateY(-4px);
+  }
+}
+
+
+/* ==============================
+   QUICK FAQ OPTIONS
+================================ */
+
+.faq-options {
+  flex-shrink: 0;
+
+  padding: 9px;
+
+  background: white;
+
+  border-top: 1px solid #eeeeee;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 6px;
+
+  box-sizing: border-box;
+}
+
+
+/* FAQ button */
+
+.faq-option {
+  width: 100%;
+
+  padding: 8px 6px;
+
+  border: 1px solid #176b3a;
+
+  border-radius: 15px;
+
+  background: white;
+
+  color: #176b3a;
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  transition: all 0.2s ease;
+}
+
+.faq-option:hover {
+  background: #176b3a;
+
+  color: white;
+}
+
+.faq-option:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+/* ==============================
+   INPUT AREA
+================================ */
+
+.faq-input-area {
+  flex-shrink: 0;
+
+  padding: 10px;
+
+  background: white;
+
+  border-top: 1px solid #eeeeee;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  box-sizing: border-box;
+}
+
+
+/* Input */
+
+.faq-input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 40px;
+
+  padding: 0 13px;
+
+  border: 1px solid #dddddd;
+
+  border-radius: 20px;
+
+  outline: none;
+
+  font-size: 13px;
+
+  box-sizing: border-box;
+}
+
+.faq-input:focus {
+  border-color: #176b3a;
+}
+
+.faq-input:disabled {
+  background: #f4f4f4;
+}
+
+
+/* Send */
+
+.faq-send {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #176b3a;
+
+  color: white;
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faq-send:hover:not(:disabled) {
+  background: #0f512b;
+}
+
+.faq-send:disabled {
+  background: #aaaaaa;
+
+  cursor: not-allowed;
+}
+
+
+/* ==============================
+   MOBILE
+================================ */
+
+@media (max-width: 600px) {
+
+  .faq-chatbot {
+    width: calc(100vw - 20px);
+
+    height: calc(100vh - 30px);
+
+    max-height: 650px;
+
+    right: 10px;
+
+    bottom: 10px;
+
+    border-radius: 16px;
+  }
+
+  .faq-chat-button {
+    right: 18px;
+
+    bottom: 18px;
+
+    width: 54px;
+    height: 54px;
+  }
+}

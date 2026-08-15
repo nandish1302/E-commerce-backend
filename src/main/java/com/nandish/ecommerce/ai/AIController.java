@@ -1,4 +1,5 @@
 package com.nandish.ecommerce.ai;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -6,12 +7,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/ai")
 public class AIController {
+
     private final AIService aiService;
 
     @PostMapping("/faq")
-    public String askFAQ(@RequestBody AIRequestDTO request){
+    public String askFAQ(@RequestBody AIRequestDTO request) {
         return aiService.askFAQ(request.getQuestion());
     }
-
-
 }
