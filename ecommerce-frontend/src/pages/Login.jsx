@@ -29,9 +29,15 @@ const Login = () => {
         }
       );
 
-      localStorage.setItem("token", response.data.token);
+      // Store JWT token
+      localStorage.setItem(
+        "token",
+        response.data.token
+      );
 
+      // Navigate to products
       navigate("/products");
+
     } catch (error) {
       console.error("Login error:", error);
 
@@ -39,6 +45,7 @@ const Login = () => {
         error.response?.data?.message ||
           "Login failed. Please check your credentials."
       );
+
     } finally {
       setLoading(false);
     }
@@ -49,51 +56,85 @@ const Login = () => {
 
       <div className="auth-card">
 
+        {/* Header */}
+
         <div className="auth-header">
-          <h1>Welcome Back</h1>
+
+          <h1>
+            Welcome Back
+          </h1>
 
           <p>
-            Login to your account to continue
+            Sign in to continue your wellness journey.
           </p>
+
         </div>
+
+
+        {/* Login Form */}
 
         <form onSubmit={handleSubmit}>
 
+          {/* Email */}
+
           <div className="form-group">
-            <label>Email</label>
+
+            <label htmlFor="login-email">
+              Email
+            </label>
 
             <input
+              id="login-email"
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) =>
                 setEmail(e.target.value)
               }
+              autoComplete="email"
             />
+
           </div>
 
+
+          {/* Password */}
+
           <div className="form-group">
-            <label>Password</label>
+
+            <label htmlFor="login-password">
+              Password
+            </label>
 
             <input
+              id="login-password"
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) =>
                 setPassword(e.target.value)
               }
+              autoComplete="current-password"
             />
+
           </div>
+
+
+          {/* Login Button */}
 
           <button
             type="submit"
             className="auth-button"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading
+              ? "Signing In..."
+              : "🌿 Sign In"}
           </button>
 
         </form>
+
+
+        {/* Register Link */}
 
         <div className="auth-footer">
 
@@ -104,7 +145,9 @@ const Login = () => {
           <button
             type="button"
             className="auth-link"
-            onClick={() => navigate("/register")}
+            onClick={() =>
+              navigate("/register")
+            }
           >
             Create an account
           </button>

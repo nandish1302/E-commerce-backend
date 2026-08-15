@@ -14,9 +14,17 @@ const Navbar = () => {
 
       <div className="navbar-container">
 
-        <Link to="/products" className="navbar-logo">
-          🛒 MyStore
+        {/* Brand */}
+
+        <Link
+          to="/products"
+          className="navbar-logo"
+        >
+          🌿 Wellness Store
         </Link>
+
+
+        {/* Navigation */}
 
         <div className="navbar-links">
 
@@ -27,6 +35,7 @@ const Navbar = () => {
             Products
           </NavLink>
 
+
           <NavLink
             to="/cart"
             className="nav-link"
@@ -34,12 +43,14 @@ const Navbar = () => {
             Cart
           </NavLink>
 
+
           <NavLink
             to="/orders"
             className="nav-link"
           >
             Orders
           </NavLink>
+
 
           <button
             className="logout-button"

@@ -11,17 +11,28 @@ const ProductCard = ({ product, addToCart }) => {
 
       <div className="product-card-content">
 
+        {/* Category */}
+
         <span className="product-category">
           {product.category}
         </span>
+
+
+        {/* Product Name */}
 
         <h2 className="product-name">
           {product.name}
         </h2>
 
+
+        {/* Description */}
+
         <p className="product-description">
           {product.description}
         </p>
+
+
+        {/* Price + Stock */}
 
         <div className="product-details">
 
@@ -29,7 +40,13 @@ const ProductCard = ({ product, addToCart }) => {
             ₹ {product.price}
           </span>
 
-          <span className="product-stock">
+          <span
+            className={
+              product.stock > 0
+                ? "product-stock in-stock"
+                : "product-stock out-of-stock"
+            }
+          >
             {product.stock > 0
               ? `In Stock: ${product.stock}`
               : "Out of Stock"}
@@ -37,7 +54,11 @@ const ProductCard = ({ product, addToCart }) => {
 
         </div>
 
+
+        {/* Add To Cart */}
+
         <div className="product-card-button">
+
           <Button
             text={
               product.stock > 0
@@ -50,6 +71,7 @@ const ProductCard = ({ product, addToCart }) => {
               }
             }}
           />
+
         </div>
 
       </div>
