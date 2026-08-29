@@ -11,3 +11,4 @@ public class EcommerceApplication {
 	}
 
 }
+//.\mvnw spring-boot:run

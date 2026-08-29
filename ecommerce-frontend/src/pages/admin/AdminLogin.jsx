@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/Auth.css";
+import "../../styles/Auth.css";
 
-const Login = () => {
+const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,21 +30,32 @@ const Login = () => {
         }
       );
 
-      // Store JWT token
-      localStorage.setItem(
-        "token",
-        response.data.token
+      const token = response.data.token;
+
+      // Decode JWT payload
+      const payload = JSON.parse(
+        atob(token.split(".")[1])
       );
 
-      // Navigate to products
-      navigate("/products");
+      const role = payload.role;
+
+      // Only ADMIN can enter admin panel
+      if (role !== "ROLE_ADMIN") {
+        alert("Access denied. Admin account required.");
+        return;
+      }
+
+      // Store admin token
+      localStorage.setItem("adminToken", token);
+
+      navigate("/admin/dashboard");
 
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Admin login error:", error);
 
       alert(
         error.response?.data?.message ||
-          "Login failed. Please check your credentials."
+          "Admin login failed. Please check your credentials."
       );
 
     } finally {
@@ -62,11 +73,11 @@ const Login = () => {
         <div className="auth-header">
 
           <h1>
-            Welcome Back
+            Admin Login
           </h1>
 
           <p>
-            Sign in to continue your wellness journey.
+            Sign in to manage your ecommerce store.
           </p>
 
         </div>
@@ -80,14 +91,14 @@ const Login = () => {
 
           <div className="form-group">
 
-            <label htmlFor="login-email">
+            <label htmlFor="admin-email">
               Email
             </label>
 
             <input
-              id="login-email"
+              id="admin-email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Enter admin email"
               value={email}
               onChange={(e) =>
                 setEmail(e.target.value)
@@ -102,14 +113,14 @@ const Login = () => {
 
           <div className="form-group">
 
-            <label htmlFor="login-password">
+            <label htmlFor="admin-password">
               Password
             </label>
 
             <input
-              id="login-password"
+              id="admin-password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="Enter admin password"
               value={password}
               onChange={(e) =>
                 setPassword(e.target.value)
@@ -129,49 +140,28 @@ const Login = () => {
           >
             {loading
               ? "Signing In..."
-              : "🌿 Sign In"}
+              : "🔐 Admin Sign In"}
           </button>
 
         </form>
 
 
-        {/* Register Link */}
+        {/* Customer Login */}
 
         <div className="auth-footer">
 
           <p>
-            Don't have an account?
+            Not an administrator?
           </p>
 
           <button
             type="button"
             className="auth-link"
             onClick={() =>
-              navigate("/register")
+              navigate("/login")
             }
           >
-            Create an account
-          </button>
-
-        </div>
-
-
-        {/* Admin Login */}
-
-        <div className="auth-footer">
-
-          <p>
-            Admin?
-          </p>
-
-          <button
-            type="button"
-            className="auth-link"
-            onClick={() =>
-              navigate("/admin/login")
-            }
-          >
-            Admin Login
+            Customer Login
           </button>
 
         </div>
@@ -182,5 +172,5 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;
 

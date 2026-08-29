@@ -1,41 +1,52 @@
 package com.nandish.ecommerce.controller;
-import java.util.*;
+
 import com.nandish.ecommerce.entity.Product;
 import com.nandish.ecommerce.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/products")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminProductController {
-          @Autowired
-      private ProductService productService ;
-          @PreAuthorize("hasRole('ADMIN')")
-          @PostMapping
-      public Product addProduct(@Valid @RequestBody Product product){
-              return productService.addProduct(product);
-          }
-          @GetMapping
-              public List<Product> getAllProduct (){
-              return productService.getAllProduct();
-          }
-          @GetMapping("/{id}")
-         public  Product getProductById(@PathVariable Long id ){
-              return productService.getProductById(id);
-          }
-    @PreAuthorize("hasRole('ADMIN')")
-          @DeleteMapping("/{id}")
-         public  String deleteProduct(@PathVariable Long id ){
-              productService.deleteProduct(id);
-              return "Product deleted by ID ";
-          }
-    @PreAuthorize("hasRole('ADMIN')")
-          @PutMapping("/{id}")
-           public Product updateProduct(@Valid @PathVariable Long id , @RequestBody Product product){
-              return productService.updateProduct(id , product);
-          }
 
+    @Autowired
+    private ProductService productService;
+
+    // Add product
+    @PostMapping
+    public Product addProduct(@Valid @RequestBody Product product) {
+        return productService.addProduct(product);
     }
+
+    // Get all products
+    @GetMapping
+    public List<Product> getAllProduct() {
+        return productService.getAllProduct();
+    }
+
+    // Get product by ID
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
+    }
+
+    // Delete product
+    @DeleteMapping("/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        return productService.deleteProduct(id);
+    }
+
+    // Update product
+    @PutMapping("/{id}")
+    public Product updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody Product product
+    ) {
+        return productService.updateProduct(id, product);
+    }
+}

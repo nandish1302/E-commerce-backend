@@ -6,6 +6,8 @@ import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import FAQChatbotPage from "./pages/FAQChatbot";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 function App() {
   return (
@@ -20,6 +22,14 @@ function App() {
       <Route path="/register" element={<Register />} />
 
 
+      {/* Admin Authentication */}
+
+      <Route
+        path="/admin/login"
+        element={<AdminLogin />}
+      />
+
+
       {/* Application */}
 
       <Route path="/products" element={<Products />} />
@@ -28,12 +38,17 @@ function App() {
 
       <Route path="/orders" element={<Orders />} />
 
+
       {/* AI Customer Support */}
 
       <Route
         path="/chatbot"
         element={<FAQChatbotPage />}
       />
+      <Route
+  path="/admin/dashboard"
+  element={<AdminDashboard />}
+/>
 
     </Routes>
   );

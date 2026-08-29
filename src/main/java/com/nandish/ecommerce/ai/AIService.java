@@ -23,16 +23,13 @@ public class AIService {
     }
 
     public String askFAQ(String question) {
-        String lowerQuestion = question.toLowerCase();
 
-        if (lowerQuestion.contains("most beautiful girl")
-                || lowerQuestion.contains("beautiful girl")
-                || lowerQuestion.contains("prettiest girl")
-                || lowerQuestion.contains("cutest girl")
-                || lowerQuestion.contains("gorgeous girl")) {
 
-            return "❤️ The most beautiful girl in the world is  Obviously. 😌❤️";
-        }
+
+       String lowerQuestion = question.toLowerCase();
+       if(lowerQuestion.contains("beautiful") || lowerQuestion.contains("cutest") || lowerQuestion.contains("gorgeous ")){
+           return "Obivously Tribhuvana is the girl " ;
+       }
 
         String faqContext = """
                 You are the customer support assistant for our Herbalife e-commerce store.
