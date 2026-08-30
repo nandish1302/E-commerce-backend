@@ -5,12 +5,20 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
 
-import "../styles/Products.css";
+import "../styles/products.css";
 
 const Products = ({ cart, setCart }) => {
   const [products, setProducts] = useState([]);
+
+  // Loading states
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
+
   const [error, setError] = useState("");
+
+  // Search and category
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
 
   const navigate = useNavigate();
 
@@ -18,13 +26,24 @@ const Products = ({ cart, setCart }) => {
   // FETCH PRODUCTS
   // =========================
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (
+    searchValue = "",
+    categoryValue = ""
+  ) => {
     const token = localStorage.getItem("token");
 
     try {
+      setLoading(true);
+      setError("");
+
       const response = await axios.get(
-        "http://localhost:8080/products",
+        "http://localhost:8080/products/filter",
         {
+          params: {
+            search: searchValue || undefined,
+            category: categoryValue || undefined,
+          },
+
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -32,17 +51,43 @@ const Products = ({ cart, setCart }) => {
       );
 
       setProducts(response.data);
+
     } catch (error) {
       console.error("Error fetching products:", error);
+
       setError("Failed to load products");
+
     } finally {
       setLoading(false);
+      setInitialLoad(false);
     }
   };
+
+  // =========================
+  // INITIAL LOAD
+  // =========================
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  // =========================
+  // SEARCH
+  // =========================
+
+  const handleSearch = () => {
+    fetchProducts(search, category);
+  };
+
+  // =========================
+  // CATEGORY
+  // =========================
+
+  const handleCategoryChange = (selectedCategory) => {
+    setCategory(selectedCategory);
+
+    fetchProducts(search, selectedCategory);
+  };
 
   // =========================
   // ADD TO CART
@@ -60,6 +105,7 @@ const Products = ({ cart, setCart }) => {
             productId: product.id,
             quantity: 1,
           },
+
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -97,19 +143,28 @@ const Products = ({ cart, setCart }) => {
   };
 
   // =========================
-  // LOADING
+  // INITIAL LOADING SCREEN
   // =========================
 
-  if (loading) {
+  if (loading && initialLoad) {
     return (
       <>
         <Navbar />
 
         <div className="products-message">
+
           <div>
-            <div className="loading-icon">🌿</div>
-            <p>Preparing your wellness collection...</p>
+
+            <div className="loading-icon">
+              🌿
+            </div>
+
+            <p>
+              Preparing your wellness collection...
+            </p>
+
           </div>
+
         </div>
       </>
     );
@@ -119,23 +174,35 @@ const Products = ({ cart, setCart }) => {
   // ERROR
   // =========================
 
-  if (error) {
+  if (error && initialLoad) {
     return (
       <>
         <Navbar />
 
         <div className="products-message error">
+
           <div>
-            <div className="loading-icon">⚠️</div>
-            <p>{error}</p>
+
+            <div className="loading-icon">
+              ⚠️
+            </div>
+
+            <p>
+              {error}
+            </p>
 
             <button
               className="retry-button"
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                setError("");
+                fetchProducts(search, category);
+              }}
             >
               Try Again
             </button>
+
           </div>
+
         </div>
       </>
     );
@@ -180,6 +247,7 @@ const Products = ({ cart, setCart }) => {
                 className="primary-button"
                 onClick={exploreProducts}
               >
+
                 <span className="button-icon">
                   🌿
                 </span>
@@ -191,6 +259,7 @@ const Products = ({ cart, setCart }) => {
                 <span className="button-arrow">
                   →
                 </span>
+
               </button>
 
 
@@ -198,11 +267,13 @@ const Products = ({ cart, setCart }) => {
                 className="secondary-button"
                 onClick={() => navigate("/chatbot")}
               >
+
                 <span className="ai-icon">
                   ✦
                 </span>
 
                 <span className="ai-button-text">
+
                   <strong>
                     Meet Your AI Guide
                   </strong>
@@ -210,11 +281,13 @@ const Products = ({ cart, setCart }) => {
                   <small>
                     Ask • Discover • Explore
                   </small>
+
                 </span>
 
                 <span className="ai-arrow">
                   ↗
                 </span>
+
               </button>
 
             </div>
@@ -369,11 +442,155 @@ const Products = ({ cart, setCart }) => {
           </div>
 
 
-          <div className="product-list">
+          {/* =================================
+              SEARCH AND CATEGORY FILTERS
+          ================================= */}
 
-            {products.length > 0 ? (
+          <div className="product-filters">
 
-              products.map((product) => (
+            {/* SEARCH */}
+
+            <div className="search-box">
+
+              <span className="search-icon">
+                🔍
+              </span>
+
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={search}
+                onChange={(e) =>
+                  setSearch(e.target.value)
+                }
+                onKeyDown={(e) => {
+
+                  if (e.key === "Enter") {
+                    handleSearch();
+                  }
+
+                }}
+              />
+
+              <button onClick={handleSearch}>
+                Search
+              </button>
+
+            </div>
+
+
+            {/* CATEGORIES */}
+
+            <div className="category-filters">
+
+              <span className="filter-label">
+                Categories
+              </span>
+
+
+              <button
+                className={
+                  category === ""
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  handleCategoryChange("")
+                }
+              >
+                All
+              </button>
+
+
+              <button
+                className={
+                  category === "Hair Care"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  handleCategoryChange("Hair Care")
+                }
+              >
+                Hair Care
+              </button>
+
+
+              <button
+                className={
+                  category === "Skin Care"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  handleCategoryChange("Skin Care")
+                }
+              >
+                Skin Care
+              </button>
+
+
+              <button
+                className={
+                  category === "Bath & Body"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  handleCategoryChange("Bath & Body")
+                }
+              >
+                Bath & Body
+              </button>
+
+
+              <button
+                className={
+                  category === "Herbal Tea"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  handleCategoryChange("Herbal Tea")
+                }
+              >
+                Herbal Tea
+              </button>
+
+
+              <button
+                className={
+                  category === "Essential Oils"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  handleCategoryChange("Essential Oils")
+                }
+              >
+                Essential Oils
+              </button>
+
+            </div>
+
+          </div>
+
+
+          {/* =================================
+              PRODUCT RESULTS
+          ================================= */}
+
+          {loading ? (
+
+            <div className="no-products">
+              🔄 Finding products...
+            </div>
+
+          ) : products.length > 0 ? (
+
+            <div className="product-list">
+
+              {products.map((product) => (
 
                 <ProductCard
                   key={product.id}
@@ -381,17 +598,18 @@ const Products = ({ cart, setCart }) => {
                   addToCart={addToCart}
                 />
 
-              ))
+              ))}
 
-            ) : (
+            </div>
 
-              <div className="no-products">
-                No products available at the moment.
-              </div>
+          ) : (
 
-            )}
+            <div className="no-products">
+              No products found.
+            </div>
 
-          </div>
+          )}
+
 
         </section>
 
@@ -430,11 +648,17 @@ const Products = ({ cart, setCart }) => {
             className="ai-guide-button"
             onClick={() => navigate("/chatbot")}
           >
-            <span>🌿</span>
+
+            <span>
+              🌿
+            </span>
 
             Ask Your Wellness Guide
 
-            <span>→</span>
+            <span>
+              →
+            </span>
+
           </button>
 
         </section>
@@ -445,3 +669,4 @@ const Products = ({ cart, setCart }) => {
 };
 
 export default Products;
+
