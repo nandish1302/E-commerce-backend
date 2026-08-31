@@ -11,7 +11,7 @@ public class AIController {
     private final AIService aiService;
 
     @PostMapping("/faq")
-    public String askFAQ(@RequestBody AIRequestDTO request) {
+    public AIResponseDTO askFAQ(@RequestBody AIRequestDTO request) {
         return aiService.askFAQ(request.getQuestion());
     }
 }

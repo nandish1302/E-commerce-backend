@@ -49,6 +49,6 @@ public class ProductService {
 
     // Search + Category filtering
     public List<Product> getProducts(String search, String category) {
-        return productRepository.searchAndFilter(search, category);
+        return productRepository.searchAndFilter(search, category , null );
     }
 }

@@ -17,9 +17,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
              LOWER(p.description) LIKE LOWER(CONCAT('%', :search, '%')))
             AND
             (:category IS NULL OR LOWER(p.category) = LOWER(:category))
+            AND
+            (:maxPrice IS NULL OR p.price <= :maxPrice)
+            AND
+            p.stock > 0
             """)
     List<Product> searchAndFilter(
             @Param("search") String search,
-            @Param("category") String category
+            @Param("category") String category,
+            @Param("maxPrice") Double maxPrice
     );
 }
+
