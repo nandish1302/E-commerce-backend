@@ -8,11 +8,19 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class OrderResponseDTO {
+public class AdminOrderResponseDTO {
 
     private Long orderId;
-    private double totalAmount;
-    private String status;
-    private LocalDateTime createdAt;
+
+    private String customerName;
+
+    private String customerEmail;
+
     private List<OrderItemDTO> items;
+
+    private double totalAmount;
+
+    private String status;
+
+    private LocalDateTime createdAt;
 }

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -30,13 +29,15 @@ const Login = () => {
         }
       );
 
-      // Store JWT token
-      localStorage.setItem(
-        "token",
-        response.data.token
-      );
+      const token = response.data?.token;
 
-      // Navigate to products
+      if (!token) {
+        alert("Login failed. No authentication token was received.");
+        return;
+      }
+
+      localStorage.setItem("token", token);
+
       navigate("/products");
 
     } catch (error) {
@@ -46,7 +47,6 @@ const Login = () => {
         error.response?.data?.message ||
           "Login failed. Please check your credentials."
       );
-
     } finally {
       setLoading(false);
     }
@@ -135,7 +135,7 @@ const Login = () => {
         </form>
 
 
-        {/* Register Link */}
+        {/* Register */}
 
         <div className="auth-footer">
 
@@ -183,4 +183,3 @@ const Login = () => {
 };
 
 export default Login;
-

@@ -1,18 +1,54 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   addProduct,
   getAdminProducts,
   deleteProduct,
+  getDashboard,
+  getAdminOrders,
+  updateOrderStatus,
 } from "../../api/adminApi";
+
 import "../../styles/AdminDashboard.css";
 
 const AdminDashboard = () => {
+
   const navigate = useNavigate();
 
+  // ==========================================
+  // PRODUCTS
+  // ==========================================
+
   const [products, setProducts] = useState([]);
+
+  // ==========================================
+  // DASHBOARD
+  // ==========================================
+
+  const [dashboard, setDashboard] = useState(null);
+
+  // ==========================================
+  // ORDERS
+  // ==========================================
+
+  const [orders, setOrders] = useState([]);
+
+  // ==========================================
+  // LOADING
+  // ==========================================
+
   const [loading, setLoading] = useState(false);
+
+  const [dashboardLoading, setDashboardLoading] =
+    useState(true);
+
+  const [ordersLoading, setOrdersLoading] =
+    useState(true);
+
+  // ==========================================
+  // PRODUCT FORM
+  // ==========================================
 
   const [form, setForm] = useState({
     name: "",
@@ -22,36 +58,203 @@ const AdminDashboard = () => {
     category: "",
   });
 
-  // Load products
+
+  // ==========================================
+  // LOAD PRODUCTS
+  // ==========================================
+
   const loadProducts = async () => {
+
     try {
+
       setLoading(true);
 
       const data = await getAdminProducts();
 
       setProducts(data);
+
     } catch (error) {
-      console.error("Failed to load products:", error);
+
+      console.error(
+        "Failed to load products:",
+        error
+      );
 
       if (
         error.response?.status === 401 ||
         error.response?.status === 403
       ) {
-        alert("Admin session expired or access denied.");
+
+        alert(
+          "Admin session expired or access denied."
+        );
+
         navigate("/admin/login");
       }
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
+
+  // ==========================================
+  // LOAD DASHBOARD
+  // ==========================================
+
+  const loadDashboard = async () => {
+
+    try {
+
+      setDashboardLoading(true);
+
+      const data = await getDashboard();
+
+      setDashboard(data);
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load dashboard:",
+        error
+      );
+
+      if (
+        error.response?.status === 401 ||
+        error.response?.status === 403
+      ) {
+
+        alert(
+          "Admin session expired or access denied."
+        );
+
+        navigate("/admin/login");
+      }
+
+    } finally {
+
+      setDashboardLoading(false);
+
+    }
+  };
+
+
+  // ==========================================
+  // LOAD ORDERS
+  // ==========================================
+
+  const loadOrders = async () => {
+
+    try {
+
+      setOrdersLoading(true);
+
+      const data = await getAdminOrders();
+
+      setOrders(data);
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load orders:",
+        error
+      );
+
+      if (
+        error.response?.status === 401 ||
+        error.response?.status === 403
+      ) {
+
+        alert(
+          "Admin session expired or access denied."
+        );
+
+        navigate("/admin/login");
+      }
+
+    } finally {
+
+      setOrdersLoading(false);
+
+    }
+  };
+
+
+  // ==========================================
+  // UPDATE ORDER STATUS
+  // ==========================================
+
+  const handleStatusChange = async (
+    orderId,
+    newStatus
+  ) => {
+
+    try {
+
+      const updatedOrder =
+        await updateOrderStatus(
+          orderId,
+          newStatus
+        );
+
+
+      // Update order in UI immediately
+
+      setOrders((previousOrders) =>
+        previousOrders.map((order) =>
+          order.orderId === orderId
+            ? updatedOrder
+            : order
+        )
+      );
+
+
+      // Refresh dashboard status counts
+
+      await loadDashboard();
+
+    } catch (error) {
+
+      console.error(
+        "Failed to update order status:",
+        error
+      );
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to update order status."
+      );
+    }
+  };
+
+
+  // ==========================================
+  // LOAD ALL DATA
+  // ==========================================
+
   useEffect(() => {
+
     loadProducts();
+
+    loadDashboard();
+
+    loadOrders();
+
   }, []);
 
-  // Handle form input
+
+  // ==========================================
+  // HANDLE FORM INPUT
+  // ==========================================
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
+
+    const {
+      name,
+      value
+    } = e.target;
 
     setForm((previous) => ({
       ...previous,
@@ -59,8 +262,13 @@ const AdminDashboard = () => {
     }));
   };
 
-  // Add product
+
+  // ==========================================
+  // ADD PRODUCT
+  // ==========================================
+
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     if (
@@ -70,104 +278,209 @@ const AdminDashboard = () => {
       !form.stock ||
       !form.category
     ) {
-      alert("Please fill all fields.");
+
+      alert(
+        "Please fill all fields."
+      );
+
       return;
     }
+
 
     if (Number(form.price) < 0) {
-      alert("Price cannot be negative.");
+
+      alert(
+        "Price cannot be negative."
+      );
+
       return;
     }
+
 
     if (Number(form.stock) < 0) {
-      alert("Stock cannot be negative.");
+
+      alert(
+        "Stock cannot be negative."
+      );
+
       return;
     }
 
+
     try {
+
       setLoading(true);
 
       const newProduct = {
+
         name: form.name,
+
         description: form.description,
+
         price: Number(form.price),
+
         stock: Number(form.stock),
+
         category: form.category,
+
         imageUrl: null,
       };
 
-      const savedProduct = await addProduct(newProduct);
+
+      const savedProduct =
+        await addProduct(newProduct);
+
 
       setProducts((previous) => [
         ...previous,
         savedProduct,
       ]);
 
+
       setForm({
+
         name: "",
+
         description: "",
+
         price: "",
+
         stock: "",
+
         category: "",
       });
 
-      alert("Product added successfully.");
+
+      // Refresh dashboard statistics
+
+      await loadDashboard();
+
+
+      alert(
+        "Product added successfully."
+      );
 
     } catch (error) {
-      console.error("Failed to add product:", error);
+
+      console.error(
+        "Failed to add product:",
+        error
+      );
 
       alert(
         error.response?.data?.message ||
-          "Failed to add product."
+        "Failed to add product."
       );
 
     } finally {
+
       setLoading(false);
+
     }
   };
 
-  // Delete product
+
+  // ==========================================
+  // DELETE PRODUCT
+  // ==========================================
+
   const handleDelete = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
+
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to delete this product?"
+      );
+
 
     if (!confirmed) {
+
       return;
     }
 
+
     try {
+
       await deleteProduct(id);
+
 
       setProducts((previous) =>
         previous.filter(
-          (product) => product.id !== id
+          (product) =>
+            product.id !== id
         )
       );
 
-      alert("Product deleted successfully.");
+
+      // Refresh dashboard statistics
+
+      await loadDashboard();
+
+
+      alert(
+        "Product deleted successfully."
+      );
 
     } catch (error) {
-      console.error("Failed to delete product:", error);
+
+      console.error(
+        "Failed to delete product:",
+        error
+      );
 
       alert(
         error.response?.data?.message ||
-          "Failed to delete product."
+        "Failed to delete product."
       );
     }
   };
 
-  // Logout
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
   const handleLogout = () => {
-    localStorage.removeItem("adminToken");
+
+    localStorage.removeItem(
+      "adminToken"
+    );
 
     navigate("/admin/login");
   };
 
+
+  // ==========================================
+  // FORMAT DATE
+  // ==========================================
+
+  const formatDate = (date) => {
+
+    if (!date) {
+      return "N/A";
+    }
+
+    return new Date(date).toLocaleString(
+      "en-IN",
+      {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }
+    );
+  };
+
+
+  // ==========================================
+  // RENDER
+  // ==========================================
+
   return (
+
     <div className="admin-page">
 
-      {/* Sidebar */}
+
+      {/* =====================================
+          SIDEBAR
+      ====================================== */}
 
       <aside className="admin-sidebar">
 
@@ -178,8 +491,15 @@ const AdminDashboard = () => {
           </div>
 
           <div>
-            <h2>Herbal Life</h2>
-            <span>Admin Panel</span>
+
+            <h2>
+              Herbal Life
+            </h2>
+
+            <span>
+              Admin Panel
+            </span>
+
           </div>
 
         </div>
@@ -187,19 +507,42 @@ const AdminDashboard = () => {
 
         <nav className="admin-nav">
 
-          <button className="admin-nav-item active">
-            <span>▦</span>
+          <button
+            className="admin-nav-item active"
+          >
+
+            <span>
+              ▦
+            </span>
+
             Dashboard
+
           </button>
 
-          <button className="admin-nav-item">
-            <span>◈</span>
+
+          <button
+            className="admin-nav-item"
+          >
+
+            <span>
+              ◈
+            </span>
+
             Products
+
           </button>
 
-          <button className="admin-nav-item">
-            <span>◫</span>
+
+          <button
+            className="admin-nav-item"
+          >
+
+            <span>
+              ◫
+            </span>
+
             Orders
+
           </button>
 
         </nav>
@@ -209,18 +552,28 @@ const AdminDashboard = () => {
           className="admin-logout"
           onClick={handleLogout}
         >
-          <span>↪</span>
+
+          <span>
+            ↪
+          </span>
+
           Logout
+
         </button>
 
       </aside>
 
 
-      {/* Main Content */}
+      {/* =====================================
+          MAIN CONTENT
+      ====================================== */}
 
       <main className="admin-main">
 
-        {/* Header */}
+
+        {/* ===================================
+            HEADER
+        ==================================== */}
 
         <header className="admin-header">
 
@@ -235,10 +588,12 @@ const AdminDashboard = () => {
             </h1>
 
             <p className="admin-subtitle">
-              Manage your herbal products and inventory.
+              Manage your herbal products,
+              inventory and orders.
             </p>
 
           </div>
+
 
           <div className="admin-profile">
 
@@ -247,8 +602,15 @@ const AdminDashboard = () => {
             </div>
 
             <div>
-              <strong>Administrator</strong>
-              <span>Store Manager</span>
+
+              <strong>
+                Administrator
+              </strong>
+
+              <span>
+                Store Manager
+              </span>
+
             </div>
 
           </div>
@@ -256,9 +618,14 @@ const AdminDashboard = () => {
         </header>
 
 
-        {/* Stats */}
+        {/* ===================================
+            MAIN DASHBOARD STATS
+        ==================================== */}
 
         <section className="stats-grid">
+
+
+          {/* TOTAL PRODUCTS */}
 
           <div className="stat-card">
 
@@ -267,12 +634,187 @@ const AdminDashboard = () => {
             </div>
 
             <div>
-              <span>Total Products</span>
-              <strong>{products.length}</strong>
+
+              <span>
+                Total Products
+              </span>
+
+              <strong>
+
+                {dashboardLoading
+                  ? "..."
+                  : dashboard?.totalProducts ?? 0}
+
+              </strong>
+
             </div>
 
           </div>
 
+
+          {/* TOTAL ORDERS */}
+
+          <div className="stat-card">
+
+            <div className="stat-icon">
+              🛒
+            </div>
+
+            <div>
+
+              <span>
+                Total Orders
+              </span>
+
+              <strong>
+
+                {dashboardLoading
+                  ? "..."
+                  : dashboard?.totalOrders ?? 0}
+
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          {/* TOTAL USERS */}
+
+          <div className="stat-card">
+
+            <div className="stat-icon">
+              👤
+            </div>
+
+            <div>
+
+              <span>
+                Customers
+              </span>
+
+              <strong>
+
+                {dashboardLoading
+                  ? "..."
+                  : dashboard?.totalUsers ?? 0}
+
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          {/* TOTAL REVENUE */}
+
+          <div className="stat-card">
+
+            <div className="stat-icon">
+              ₹
+            </div>
+
+            <div>
+
+              <span>
+                Total Revenue
+              </span>
+
+              <strong>
+
+                ₹
+                {dashboardLoading
+                  ? "..."
+                  : Number(
+                      dashboard?.totalRevenue ?? 0
+                    ).toFixed(2)}
+
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* ===================================
+            ORDER STATUS
+        ==================================== */}
+
+        <section className="stats-grid">
+
+
+          {/* PLACED */}
+
+          <div className="stat-card">
+
+            <div className="stat-icon">
+              🕐
+            </div>
+
+            <div>
+
+              <span>
+                Placed
+              </span>
+
+              <strong>
+                {dashboard?.placedOrders ?? 0}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          {/* PROCESSING */}
+
+          <div className="stat-card">
+
+            <div className="stat-icon">
+              ⚙
+            </div>
+
+            <div>
+
+              <span>
+                Processing
+              </span>
+
+              <strong>
+                {dashboard?.processingOrders ?? 0}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          {/* SHIPPED */}
+
+          <div className="stat-card">
+
+            <div className="stat-icon">
+              📦
+            </div>
+
+            <div>
+
+              <span>
+                Shipped
+              </span>
+
+              <strong>
+                {dashboard?.shippedOrders ?? 0}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          {/* DELIVERED */}
 
           <div className="stat-card">
 
@@ -281,56 +823,15 @@ const AdminDashboard = () => {
             </div>
 
             <div>
-              <span>In Stock</span>
+
+              <span>
+                Delivered
+              </span>
+
               <strong>
-                {
-                  products.filter(
-                    (product) => product.stock > 0
-                  ).length
-                }
+                {dashboard?.deliveredOrders ?? 0}
               </strong>
-            </div>
 
-          </div>
-
-
-          <div className="stat-card">
-
-            <div className="stat-icon">
-              !
-            </div>
-
-            <div>
-              <span>Low Stock</span>
-              <strong>
-                {
-                  products.filter(
-                    (product) =>
-                      product.stock > 0 &&
-                      product.stock <= 10
-                  ).length
-                }
-              </strong>
-            </div>
-
-          </div>
-
-
-          <div className="stat-card">
-
-            <div className="stat-icon">
-              ⊘
-            </div>
-
-            <div>
-              <span>Out of Stock</span>
-              <strong>
-                {
-                  products.filter(
-                    (product) => product.stock === 0
-                  ).length
-                }
-              </strong>
             </div>
 
           </div>
@@ -338,7 +839,276 @@ const AdminDashboard = () => {
         </section>
 
 
-        {/* Add Product */}
+        {/* ===================================
+            RECENT ORDERS
+        ==================================== */}
+
+        <section className="admin-card">
+
+          <div className="section-heading">
+
+            <div>
+
+              <p className="section-label">
+                ORDER MANAGEMENT
+              </p>
+
+              <h2>
+                Recent Orders
+              </h2>
+
+              <p>
+                Orders placed by your customers.
+              </p>
+
+            </div>
+
+
+            <div className="product-count">
+              {orders.length} Orders
+            </div>
+
+          </div>
+
+
+          {ordersLoading ? (
+
+            <div className="empty-state">
+
+              <p>
+                Loading orders...
+              </p>
+
+            </div>
+
+          ) : orders.length === 0 ? (
+
+            <div className="empty-state">
+
+              <div className="empty-icon">
+                🛒
+              </div>
+
+              <h3>
+                No orders yet
+              </h3>
+
+              <p>
+                Customer orders will appear here.
+              </p>
+
+            </div>
+
+          ) : (
+
+            <div className="products-table-wrapper">
+
+              <table className="products-table">
+
+                <thead>
+
+                  <tr>
+
+                    <th>
+                      Order
+                    </th>
+
+                    <th>
+                      Customer
+                    </th>
+
+                    <th>
+                      Products Ordered
+                    </th>
+
+                    <th>
+                      Amount
+                    </th>
+
+                    <th>
+                      Status
+                    </th>
+
+                    <th>
+                      Date & Time
+                    </th>
+
+                  </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                  {orders.map(
+                    (order) => (
+
+                      <tr
+                        key={order.orderId}
+                      >
+
+
+                        {/* ORDER ID */}
+
+                        <td>
+
+                          <strong>
+                            #{order.orderId}
+                          </strong>
+
+                        </td>
+
+
+                        {/* CUSTOMER */}
+
+                        <td>
+
+                          <div className="product-name">
+
+                            <div className="product-placeholder">
+                              👤
+                            </div>
+
+                            <div>
+
+                              <strong>
+                                {order.customerName}
+                              </strong>
+
+                              <span>
+                                {order.customerEmail}
+                              </span>
+
+                            </div>
+
+                          </div>
+
+                        </td>
+
+
+                        {/* PRODUCTS ORDERED */}
+
+                        <td>
+
+                          <div>
+
+                            {order.items?.map(
+                              (item, index) => (
+
+                                <div
+                                  key={index}
+                                  style={{
+                                    marginBottom:
+                                      "6px",
+                                  }}
+                                >
+
+                                  <strong>
+                                    {item.productName}
+                                  </strong>
+
+                                  <span
+                                    style={{
+                                      marginLeft:
+                                        "8px",
+                                    }}
+                                  >
+                                    × {item.quantity}
+                                  </span>
+
+                                </div>
+
+                              )
+                            )}
+
+                          </div>
+
+                        </td>
+
+
+                        {/* AMOUNT */}
+
+                        <td className="price">
+
+                          ₹
+                          {Number(
+                            order.totalAmount
+                          ).toFixed(2)}
+
+                        </td>
+
+
+                        {/* STATUS */}
+
+                        <td>
+
+                          <select
+                            value={order.status}
+                            onChange={(e) =>
+                              handleStatusChange(
+                                order.orderId,
+                                e.target.value
+                              )
+                            }
+                            className={`order-status-select ${order.status?.toLowerCase()}`}
+                          >
+
+                            <option value="PLACED">
+                              Placed
+                            </option>
+
+                            <option value="PROCESSING">
+                              Processing
+                            </option>
+
+                            <option value="SHIPPED">
+                              Shipped
+                            </option>
+
+                            <option value="DELIVERED">
+                              Delivered
+                            </option>
+
+                            <option value="CANCELLED">
+                              Cancelled
+                            </option>
+
+                          </select>
+
+                        </td>
+
+
+                        {/* DATE & TIME */}
+
+                        <td>
+
+                          <span>
+                            {formatDate(
+                              order.createdAt
+                            )}
+                          </span>
+
+                        </td>
+
+                      </tr>
+
+                    )
+                  )}
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          )}
+
+        </section>
+
+
+        {/* ===================================
+            ADD PRODUCT
+        ==================================== */}
 
         <section className="admin-card">
 
@@ -367,6 +1137,7 @@ const AdminDashboard = () => {
             className="product-form"
             onSubmit={handleSubmit}
           >
+
 
             <div className="form-field">
 
@@ -463,9 +1234,11 @@ const AdminDashboard = () => {
                 className="primary-button"
                 disabled={loading}
               >
+
                 {loading
                   ? "Adding Product..."
                   : "+ Add Product"}
+
               </button>
 
             </div>
@@ -475,7 +1248,9 @@ const AdminDashboard = () => {
         </section>
 
 
-        {/* Product List */}
+        {/* ===================================
+            PRODUCT LIST
+        ==================================== */}
 
         <section className="admin-card products-card">
 
@@ -497,6 +1272,7 @@ const AdminDashboard = () => {
 
             </div>
 
+
             <div className="product-count">
               {products.length} Products
             </div>
@@ -507,7 +1283,11 @@ const AdminDashboard = () => {
           {loading && products.length === 0 ? (
 
             <div className="empty-state">
-              <p>Loading products...</p>
+
+              <p>
+                Loading products...
+              </p>
+
             </div>
 
           ) : products.length === 0 ? (
@@ -537,94 +1317,130 @@ const AdminDashboard = () => {
                 <thead>
 
                   <tr>
-                    <th>Product</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Action</th>
+
+                    <th>
+                      Product
+                    </th>
+
+                    <th>
+                      Category
+                    </th>
+
+                    <th>
+                      Price
+                    </th>
+
+                    <th>
+                      Stock
+                    </th>
+
+                    <th>
+                      Action
+                    </th>
+
                   </tr>
 
                 </thead>
 
+
                 <tbody>
 
-                  {products.map((product) => (
+                  {products.map(
+                    (product) => (
 
-                    <tr key={product.id}>
+                      <tr
+                        key={product.id}
+                      >
 
-                      <td>
+                        <td>
 
-                        <div className="product-name">
+                          <div className="product-name">
 
-                          <div className="product-placeholder">
-                            🌿
+                            <div className="product-placeholder">
+                              🌿
+                            </div>
+
+                            <div>
+
+                              <strong>
+                                {product.name}
+                              </strong>
+
+                              <span>
+                                ID #{product.id}
+                              </span>
+
+                            </div>
+
                           </div>
 
-                          <div>
-
-                            <strong>
-                              {product.name}
-                            </strong>
-
-                            <span>
-                              ID #{product.id}
-                            </span>
-
-                          </div>
-
-                        </div>
-
-                      </td>
+                        </td>
 
 
-                      <td>
-                        <span className="category-badge">
-                          {product.category}
-                        </span>
-                      </td>
+                        <td>
+
+                          <span className="category-badge">
+
+                            {product.category}
+
+                          </span>
+
+                        </td>
 
 
-                      <td className="price">
-                        ₹{Number(product.price).toFixed(2)}
-                      </td>
+                        <td className="price">
+
+                          ₹
+                          {Number(
+                            product.price
+                          ).toFixed(2)}
+
+                        </td>
 
 
-                      <td>
+                        <td>
 
-                        <span
-                          className={`stock-badge ${
-                            product.stock === 0
-                              ? "out"
-                              : product.stock <= 10
-                              ? "low"
-                              : "available"
-                          }`}
-                        >
-                          {product.stock === 0
-                            ? "Out of stock"
-                            : `${product.stock} in stock`}
-                        </span>
+                          <span
+                            className={`stock-badge ${
+                              product.stock === 0
+                                ? "out"
+                                : product.stock <= 10
+                                ? "low"
+                                : "available"
+                            }`}
+                          >
 
-                      </td>
+                            {product.stock === 0
+                              ? "Out of stock"
+                              : `${product.stock} in stock`}
+
+                          </span>
+
+                        </td>
 
 
-                      <td>
+                        <td>
 
-                        <button
-                          type="button"
-                          className="delete-button"
-                          onClick={() =>
-                            handleDelete(product.id)
-                          }
-                        >
-                          Delete
-                        </button>
+                          <button
+                            type="button"
+                            className="delete-button"
+                            onClick={() =>
+                              handleDelete(
+                                product.id
+                              )
+                            }
+                          >
 
-                      </td>
+                            Delete
 
-                    </tr>
+                          </button>
 
-                  ))}
+                        </td>
+
+                      </tr>
+
+                    )
+                  )}
 
                 </tbody>
 
@@ -636,11 +1452,13 @@ const AdminDashboard = () => {
 
         </section>
 
+
       </main>
 
     </div>
   );
 };
+
 
 export default AdminDashboard;
 

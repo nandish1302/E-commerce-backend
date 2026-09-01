@@ -6,29 +6,44 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import  java.util.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "orders")  //@Table(name = "orders")
-//👉 Forces table name
+@Table(name = "orders")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id ;
+    private Long id;
 
-    @ManyToOne //Many objects of THIS class → belong to ONE User
-
-    @JoinColumn(name="user_id")     // join to user id table . IT acts as an Foreign key
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @JsonIgnore
-    private User user ;
+    private User user;
 
-    private double totalAmount ;
+    private double totalAmount;
 
-    @OneToMany(mappedBy = "order")   // 👈 ADD HERE
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+
+        if (status == null) {
+            status = OrderStatus.PLACED;
+        }
+    }
 }
